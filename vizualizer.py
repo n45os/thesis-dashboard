@@ -440,8 +440,8 @@ with col1:
     st.markdown("## :innocent: Benign Data")
     st.write(
         f"""
-            This section contains {len(benign_filtered_data)} {'chart' if len(benign_filtered_data)==1 else 'charts'} of **benign data** based on the filters selected.
-            The benign data is used as a baseline for comparison with the adversarial data and includes simulations with no adversaries.
+            *This section contains {len(benign_filtered_data)} {'chart' if len(benign_filtered_data)==1 else 'charts'} of **benign data** based on the filters selected.
+            The benign data is used as a baseline for comparison with the adversarial data and includes simulations with no adversaries.*
             """
     )
     with st.expander(
@@ -459,8 +459,8 @@ with col1:
     st.markdown("## :skull: Adversarial Data")
     st.write(
         f"""
-            This section contains {len(adversarial_filtered_data)} {'chart' if len(adversarial_filtered_data)==1 else 'charts'} of **adversarial data** based on the filters selected.
-            The adversarial data includes simulations with adversaries and is used to compare the impact of adversaries on the model.
+            *This section contains {len(adversarial_filtered_data)} {'chart' if len(adversarial_filtered_data)==1 else 'charts'} of **adversarial data** based on the filters selected.
+            The adversarial data includes simulations with adversaries and is used to compare the impact of adversaries on the model.*
             """
     )
     # Create a button that toggles the state
@@ -512,6 +512,8 @@ with col1:
 with col2:
     # Use an expander for the combined graph
     st.markdown("## Combined Graphs")
+
+    st.markdown("*Select adversial graphs from the left column and select one of the the benign options below. Then, press the button to generate the combined graph.*")
 
     include_benign = st.checkbox("Include All Benign Data", value=False)
 
