@@ -1,19 +1,13 @@
 import base64
 import hashlib
-import io
-import os
 import json
-import glob
-from matplotlib import pyplot as plt
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import matplotlib.colors as mcolors
 
 from analysis.helpers import get_color
-from analysis.impact import calculate_impact
 from analysis.loaders import (
     count_adversarial_data,
     count_benign_data,
@@ -236,86 +230,6 @@ def create_visualization(round_data, config_data):
     checkbox_id = "checkbox-" + graph_id
 
     return fig, graph_id, checkbox_id
-
-
-def create_visualization_matplotlib(round_data, config_data):
-    if "accuracy" in round_data:
-        accuracy_df = pd.DataFrame(
-            round_data["accuracy"], columns=["Round", "Accuracy"]
-        )
-        color = get_color(config_data)  # Assuming this function returns a color string
-
-        fig, ax1 = plt.subplots(figsize=(10, 6))
-
-        # Plotting accuracy
-        ax1.plot(
-            accuracy_df["Round"],
-            accuracy_df["Accuracy"],
-            label="Accuracy",
-            color=color,
-            marker="o",
-            linestyle="-",
-        )
-        ax1.set_xlabel("Round")
-        ax1.set_ylabel("Accuracy", color=color)
-        ax1.tick_params(axis="y", labelcolor=color)
-        ax1.set_ylim([-0.15, 1])  # Set y-axis range
-
-        # Adding final accuracy annotation
-        last_point = accuracy_df.iloc[-1]
-        ax1.annotate(
-            f"Final accuracy: {last_point['Accuracy']:.2f}",
-            (last_point["Round"], last_point["Accuracy"]),
-            textcoords="offset points",
-            xytext=(0, 10),
-            ha="center",
-            arrowprops=dict(arrowstyle="->", color="red"),
-        )
-
-        # Plotting impact data if present
-        if "impact" in round_data or "round_impact" in round_data:
-            impact_key = "round_impact" if "round_impact" in round_data else "impact"
-            impact_df = pd.DataFrame(
-                round_data[impact_key], columns=["Round", "Impact"]
-            )
-
-            # Creating a secondary y-axis for impact data
-            ax2 = ax1.twinx()
-            ax2.bar(
-                impact_df["Round"],
-                impact_df["Impact"],
-                label="Impact",
-                color="red",
-                alpha=0.7,
-            )
-            ax2.set_ylabel("Impact", color="red")
-            ax2.tick_params(axis="y", labelcolor="red")
-
-        # Title and legend
-        fig.suptitle("Accuracy Over Rounds")
-        fig.legend(loc="upper right", bbox_to_anchor=(1.15, 1))
-
-        plt.tight_layout()
-
-        # Saving figure to a buffer instead of displaying
-        buf = io.BytesIO()
-        plt.savefig(buf, format="pgf")
-        buf.seek(0)
-
-        # Clean up plt to avoid interference with other plots
-        plt.close(fig)
-
-        # Generate identifiers for graph and checkbox
-        graph_id = (
-            "graph-"
-            + hashlib.md5(json.dumps(round_data).encode("utf-8")).hexdigest()[:8]
-        )
-        checkbox_id = "checkbox-" + graph_id
-
-        return buf, graph_id, checkbox_id
-    else:
-        print("Missing accuracy data in the selected file.")
-        return None, None, None
 
 
 @st.cache_resource
@@ -565,9 +479,7 @@ with col1:
         for round_data, config_data, timing_data in adversarial_filtered_data:
             display_config(config_data)
             fig, graph_id, checkbox_id = create_visualization(round_data, config_data)
-            buf, graph_id_mat, checkbox_id_mat = create_visualization_matplotlib(
-                round_data, config_data
-            )
+        
             if fig:
                 # Display the checkbox with each graph
                 if st.session_state.all_graphs_selected:
