@@ -130,7 +130,7 @@ def display_config(config_data):
     if config_data.get("adversaries_fraction", 0) == 0:
         config_str = (
             f"⚙️ Model: {config_data.get('dataset', {}).get('name', 'N/A')} with {config_data.get('strategy', {}).get('name', 'N/A')} | "
-            f"👥 {config_data.get('num_clients', 'N/A')} clients | "
+            f"👥 {config_data.get('num_clients', 'N/A')} clients \n\n "
             f"😇 Benign "
         )
     st.write(f"{config_str}")
@@ -397,14 +397,6 @@ with st.expander("**Information and Instructions**"):
 - **Combine and Compare Results:** Select multiple adversarial simulations to combine them into a single graph for comparison. Use the checkboxes to select the graphs you want to combine, then click the 'Combine Selected Graphs' button to generate the combined graph.
     """)
 
-# choose the root folder in streamlit\
-# get a list with all folders in the root folder
-# choose the folder to visualize
-
-# folder_path = st.text_input(
-#     "Enter the path to the folder with the results", "./results"
-# )
-
 folder_path = "./res_complete"
 data_list = load_data(folder_path)
 
@@ -599,19 +591,6 @@ with col1:
                 if toggle:
                     selected_graphs.append(graph_id)
 
-                # if st.button("Download as PGF", key=graph_id):
-                #     st.write("Downloading as PGF..")
-                #     plt.savefig(buf, format="pgf")
-                #     st.write("Download complete!")
-
-                # st.download_button(
-                #     "Download as PGF",
-                #     buf,
-                #     f"{graph_id}.pgf",
-                #     key=graph_id_mat,
-                #     mime="application/octet-stream",
-                # )
-
                 st.plotly_chart(fig, use_container_width=True)
                 # st.write(fig)
             st.markdown("---")
@@ -689,9 +668,3 @@ if combine_button:
                     selected_graphs, adversarial_filtered_data
                 )
                 st.plotly_chart(combined_fig)
-
-    # if combined_fig:
-    #     svg_bytes = fig_to_svg(combined_fig)
-    #     create_download_button(
-    #         svg_bytes, "combined_graph.svg", "Download Combined Graph as SVG"
-    #     )
