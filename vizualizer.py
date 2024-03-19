@@ -423,7 +423,7 @@ st.write(
 st.markdown("---")
 
 
-col1, spacer, col2 = st.columns([1, 0.2, 1])
+col1, spacer, col2 = st.columns([1, 0.1, 1])
 
 with col1:
     # Initialize the session state for the button if it doesn't already exist
@@ -553,13 +553,13 @@ if combine_button:
             combined_fig = combine_graphs(
                 selected_graphs, filtered_data, filtered_benign_data
             )
-            st.plotly_chart(combined_fig)
+            st.plotly_chart(combined_fig, use_container_width=True)
         else:
             if include_benign:
                 combined_fig = combine_graphs(
                     selected_graphs, filtered_data, filtered_benign_data
                 )
-                st.plotly_chart(combined_fig)
+                st.plotly_chart(combined_fig, use_container_width=True)
 
             elif include_best_benign:
                 # get best bening data. It will be the one that the end accuracy is the highest
@@ -576,9 +576,9 @@ if combine_button:
                     selected_graphs, filtered_data, [benign_best]
                 )
 
-                st.plotly_chart(combined_fig)
+                st.plotly_chart(combined_fig, use_container_width=True)
             else:
                 combined_fig = combine_graphs(
                     selected_graphs, adversarial_filtered_data
                 )
-                st.plotly_chart(combined_fig)
+                st.plotly_chart(combined_fig, use_container_width=True)
